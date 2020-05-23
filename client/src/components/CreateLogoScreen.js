@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const ADD_LOGO = gql`
     mutation AddLogo(
+        $user: String!,
         $text: String!,
         $color: String!,
         $fontSize: Int!,
@@ -15,6 +16,7 @@ const ADD_LOGO = gql`
         $padding: Int!,
         $margin: Int!) {
         addLogo(
+            user: $user,
             text: $text,
             color: $color,
             fontSize: $fontSize,
@@ -43,6 +45,13 @@ class CreateLogoScreen extends Component {
             padding: "10",
             margin: "10"
         };
+    }
+
+    componentDidMount() {
+        let auth=localStorage.getItem("User");
+        if(!auth){
+            window.location.href="http://localhost:3000/auth/google";
+        }
     }
 
     handleTextChange =(event) =>{
@@ -90,7 +99,8 @@ class CreateLogoScreen extends Component {
     }
 
     render() {
-        let text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        user = localStorage.getItem("User")
         return (
             <Mutation mutation={ADD_LOGO} onCompleted={data => {this.props.history.push(`/view/${data.addLogo._id}`)}
                 }>
@@ -111,7 +121,7 @@ class CreateLogoScreen extends Component {
                                             if((text.value).trim() === ""){
                                                 return false;
                                             }
-                                            addLogo({ variables: { text: (text.value).trim().replace(/ /g,"\xa0"), color: color.value, 
+                                            addLogo({ variables: {user: user, text: (text.value).trim().replace(/ /g,"\xa0"), color: color.value, 
                                                 fontSize: parseInt(fontSize.value), backgroundColor: backgroundColor.value,
                                                 borderColor: borderColor.value, borderStyle: "solid",
                                                 borderRadius: parseInt(borderRadius.value), borderWidth: parseInt(borderWidth.value) ,

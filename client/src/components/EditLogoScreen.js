@@ -4,8 +4,8 @@ import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 
 const GET_LOGO = gql`
-    query logo($logoId: String) {
-        logo(id: $logoId) {
+    query logo($logoId: String, $user: String) {
+        logo(id: $logoId, user: $user),  {
             _id
             text
             color
@@ -23,6 +23,7 @@ const GET_LOGO = gql`
 const UPDATE_LOGO = gql`
     mutation updateLogo(
         $id: String!,
+        $user: String!,
         $text: String!,
         $color: String!,
         $fontSize: Int!,
@@ -34,6 +35,7 @@ const UPDATE_LOGO = gql`
         $margin: Int!) {
             updateLogo(
                 id: $id,
+                user: $user,
                 text: $text,
                 color: $color,
                 fontSize: $fontSize,
@@ -62,6 +64,13 @@ class EditLogoScreen extends Component {
             padding: null,
             margin: null
         };
+    }
+
+    componentDidMount() {
+        let auth=localStorage.getItem("User");
+        if(!auth){
+            window.location.href="http://localhost:3000/auth/google";
+        }
     }
 
     handleTextChange =(event) =>{
@@ -109,7 +118,8 @@ class EditLogoScreen extends Component {
     }
 
     render() {
-        let text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        user = localStorage.getItem("User");
         return (
             <Query query={GET_LOGO} variables={{ logoId: this.props.match.params.id }}>
                 {({ loading, error, data }) => {
@@ -147,6 +157,7 @@ class EditLogoScreen extends Component {
                                                             return false;
                                                         }
                                                         updateLogo({ variables: { 
+                                                            user: user,
                                                             id: data.logo._id, 
                                                             text: (text.value).trim().replace(/ /g,"\xa0"), 
                                                             color: color.value, 

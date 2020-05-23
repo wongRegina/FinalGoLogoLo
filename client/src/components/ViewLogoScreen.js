@@ -5,8 +5,8 @@ import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 
 const GET_LOGO = gql`
-    query logo($logoId: String) {
-        logo(id: $logoId) {
+    query logo($logoId: String, $user: String) {
+        logo(id: $logoId, user: $user) {
             _id
             text
             color
@@ -32,12 +32,20 @@ const DELETE_LOGO = gql`
 
 class ViewLogoScreen extends Component {
 
+    componentDidMount() {
+        let auth=localStorage.getItem("User");
+        if(!auth){
+            window.location.href="http://localhost:3000/auth/google";
+        }
+    }
+
     render() {
         return (
-            <Query pollInterval={500} query={GET_LOGO} variables={{ logoId: this.props.match.params.id }}>
+            <Query pollInterval={500} query={GET_LOGO} variables={{ logoId: this.props.match.params.id, user: localStorage.getItem("User") }}>
                 {({ loading, error, data }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
+                    if (!data.logo) return `Error! Permission Denied`;
 
                     return (
                         <div className="container">

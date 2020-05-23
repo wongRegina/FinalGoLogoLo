@@ -8,12 +8,16 @@ var GraphQLString = require('graphql').GraphQLString;
 var GraphQLInt = require('graphql').GraphQLInt;
 var GraphQLDate = require('graphql-date');
 var LogoModel = require('../models/Logo');
+var UserModel = require('../models/Users');
 
 var logoType = new GraphQLObjectType({
     name: 'logo',
     fields: function () {
         return {
             _id: {
+                type: GraphQLString
+            },
+            user:{
                 type: GraphQLString
             },
             text: {
@@ -54,32 +58,53 @@ var queryType = new GraphQLObjectType({
     name: 'Query',
     fields: function () {
         return {
-            logos: {
-                type: new GraphQLList(logoType),
-                resolve: function () {
-                    const logos = LogoModel.find().exec()
-                    if (!logos) {
-                        throw new Error('Error')
-                    }
-                    return logos
-                }
-            },
+            // logos: {
+            //     type: new GraphQLList(logoType),
+            //     resolve: function () {
+            //         const logos = LogoModel.find().exec()
+            //         if (!logos) {
+            //             throw new Error('Error')
+            //         }
+            //         return logos
+            //     }
+            // },
             logo: {
                 type: logoType,
                 args: {
                     id: {
                         name: '_id',
                         type: GraphQLString
+                    },
+                    user:{
+                        name: "user",
+                        type: GraphQLString
                     }
                 },
                 resolve: function (root, params) {
-                    const logoDetails = LogoModel.findById(params.id).exec()
+                    //const logoDetails = LogoModel.findById(params.id).exec()
+                    const logoDetails = LogoModel.findOne({ _id: params.id, uid: params.uid }).exec();
                     if (!logoDetails) {
                         throw new Error('Error')
                     }
                     return logoDetails
                 }
-            }
+            },
+            getLogoByUid: {
+                type: new GraphQLList(logoType),
+                args: {
+                    uid: {
+                        name: 'uid',
+                        type: GraphQLString
+                    }
+                },
+                resolve: function (root, params) {
+                    const logos = LogoModel.find({ uid: params.uid }).exec();
+                    if (!logos) {
+                        throw new Error('Error');
+                    }
+                    return logos;
+                }
+            },
         }
     }
 });
@@ -91,6 +116,9 @@ var mutation = new GraphQLObjectType({
             addLogo: {
                 type: logoType,
                 args: {
+                    user:{
+                        type :new GraphQLNonNull(GraphQLString)
+                    },
                     text: {
                         type: new GraphQLNonNull(GraphQLString)
                     },
@@ -123,12 +151,18 @@ var mutation = new GraphQLObjectType({
                     }
                 },
                 resolve: function (root, params) {
-                    const logoModel = new LogoModel(params);
-                    const newLogo = logoModel.save();
-                    if (!newLogo) {
-                        throw new Error('Error');
-                    }
-                    return newLogo
+                    UserModel.findOne({ uid: params.uid }, function (err, result) {
+                        if (err) throw new Error(err);
+                        if (!result) {
+                            return null;
+                        }
+                        const logoModel = new LogoModel(params);
+                        const newLogo = logoModel.save();
+                        if (!newLogo) {
+                            throw new Error('Error');
+                        }
+                        return newLogo
+                    })
                 }
             },
             updateLogo: {
@@ -136,6 +170,9 @@ var mutation = new GraphQLObjectType({
                 args: {
                     id: {
                         name: 'id',
+                        type: new GraphQLNonNull(GraphQLString)
+                    },
+                    user: {
                         type: new GraphQLNonNull(GraphQLString)
                     },
                     text: {
@@ -167,12 +204,15 @@ var mutation = new GraphQLObjectType({
                     }
                 },
                 resolve(root, params) {
-                    return LogoModel.findByIdAndUpdate(params.id, { text: params.text, color: params.color, 
-                        fontSize: params.fontSize, backgroundColor: params.backgroundColor, borderColor: params.borderColor,
-                        borderRadius: params.borderRadius, borderWidth: params.borderWidth, padding: params.padding, 
-                        margin: params.margin, lastUpdate: new Date() }, function (err) {
-                        if (err) return (err);
-                    });
+                    return LogoModel.findByIdAndUpdate(params.id,
+                        {
+                            uid: params.uid, text: params.text, color: params.color, fontSize: params.fontSize,
+                            backgroundColor: params.backgroundColor, borderColor: params.borderColor,
+                            borderWidth: params.borderWidth, borderRadius: params.borderRadius,
+                            padding: params.padding, margin: params.margin, lastUpdate: new Date()
+                        }, function (err) {
+                            if (err) return next(err);
+                        });
                 }
             },
             removeLogo: {
