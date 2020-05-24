@@ -25,3 +25,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+db/WiredTiger.lock
+db/diagnostic.data/metrics.2020-05-24T02-39-48Z-00000
+db/diagnostic.data/metrics.interim
