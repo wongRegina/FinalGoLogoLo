@@ -55,16 +55,10 @@ class HomeScreen extends Component {
                                 <div id="home_banner_container">
                                     GoLogoLo
                                 </div>
-                                <div>  </div>
+                                <br></br>
                                 <div>
-                                    <Link id="add_logo_button" to="/create" style={{
-                                        backgroundColor: "#C0C0C0",
-                                        paddingLeft: "5px",
-                                        paddingRight: "5px",
-                                        borderStyle: "solid",
-                                        borderColor: "#000000",
-                                        borderWidth: "1px"
-                                    }}>Create a New</Link>
+                                    <Link id="add_logo_button" to="/create" className={"btn btn-secondary btn-block"}>Add Logo</Link>
+                                    <button  onClick={()=>{localStorage.clear(); window.location.href="http://localhost:3000/auth/google/logout";}} id="logout_button" className={"btn btn-primary btn-block"}>Log out</button>
                                 </div>
                             </div>
                         </div>
