@@ -3,8 +3,11 @@
 # dependencies
 /client/node_modules
 /server/node_modules
+/db
 /.pnp
 .pnp.js
+*.mdf
+*.ldf
 
 # testing
 /coverage
