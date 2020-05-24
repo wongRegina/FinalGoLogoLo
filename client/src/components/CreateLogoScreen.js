@@ -94,7 +94,7 @@ class CreateLogoScreen extends Component {
     }
 
     handleMarginChange = (event) => {
-        console.log("handleMarginChange to " + event.target.value)
+       // console.log("handleMarginChange to " + event.target.value)
         this.setState({ margin: event.target.value });
     }
 
@@ -102,9 +102,9 @@ class CreateLogoScreen extends Component {
         let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
         user = localStorage.getItem("User")
         return (
-            <Mutation mutation={ADD_LOGO} onCompleted={data => {this.props.history.push(`/view/${data.addLogo._id}`)}
-                }>
-                {(addLogo, { loading, error }) => (
+            //<Mutation mutation={ADD_LOGO} onCompleted={data => {this.props.history.push(`/view/${data.addLogo._id}`)}}>
+            <Mutation mutation={ADD_LOGO} onCompleted={() => this.props.history.push('/')}>
+            {(addLogo, { loading, error }) => (
                     <div className="container">
                         <div className="panel panel-default">
                             <div className="panel-heading">
@@ -117,15 +117,24 @@ class CreateLogoScreen extends Component {
                                 <div className ="container row">
                                     <div className ="col-md-3">
                                         <form onSubmit={e => {
+                                            console.log("a")
                                             e.preventDefault();
+                                            console.log("b")
                                             if((text.value).trim() === ""){
                                                 return false;
                                             }
-                                            addLogo({ variables: {user: user, text: (text.value).trim().replace(/ /g,"\xa0"), color: color.value, 
-                                                fontSize: parseInt(fontSize.value), backgroundColor: backgroundColor.value,
-                                                borderColor: borderColor.value, borderStyle: "solid",
-                                                borderRadius: parseInt(borderRadius.value), borderWidth: parseInt(borderWidth.value) ,
-                                                padding: parseInt(padding.value), margin: parseInt(margin.value) } });
+                                            console.log("c")
+                                            addLogo({ variables: { 
+                                                user: user,
+                                                text: (text.value).trim().replace(/ /g,"\xa0"), 
+                                                color: color.value, 
+                                                fontSize: parseInt(fontSize.value), 
+                                                backgroundColor: backgroundColor.value,
+                                                borderColor: borderColor.value, 
+                                                borderRadius: parseInt(borderRadius.value), 
+                                                borderWidth: parseInt(borderWidth.value),
+                                                padding: parseInt(padding.value), 
+                                                margin: parseInt(margin.value)} });
                                             text.value = "";
                                             color.value = "";
                                             fontSize.value = ""
@@ -139,7 +148,7 @@ class CreateLogoScreen extends Component {
                                             <div className="form-group">
                                                 <label htmlFor="text">Text:</label>
                                                 <input type="text" className="form-control" name="text"
-                                                    onChange={this.handleTextChange} ref={node => {
+                                                    onChange={(this.handleTextChange)} ref={node => {
                                                     text = node;
                                                 }} placeholder="Text" defaultValue="GoLogoLo"/>
                                             </div>

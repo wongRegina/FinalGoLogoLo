@@ -11,15 +11,9 @@ import HomeScreen from './components/HomeScreen';
 import EditLogoScreen from './components/EditLogoScreen';
 import CreateLogoScreen from './components/CreateLogoScreen';
 import ViewLogoScreen from './components/ViewLogoScreen';
-import Login from './components/Login';
+import LoginRedirect from './components/LoginRedirect';
 
-const client = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
-    onError: ({ networkError, graphQLErrors }) => {
-        console.log('graphQLErrors', graphQLErrors)
-        console.log('networkErrors', networkError)
-    }
-});
+const client = new ApolloClient({ uri: 'http://localhost:3000/graphql' });
 
 ReactDOM.render(
     <ApolloProvider client={client}>
@@ -29,10 +23,10 @@ ReactDOM.render(
                 <Route path='/edit/:id' component={EditLogoScreen} />
                 <Route path='/create' component={CreateLogoScreen} />
                 <Route path='/view/:id' component={ViewLogoScreen} />
-                <Route exact path= '/redirect/:id' component={Login} />
+                <Route exact path='/redirect/:id' component={LoginRedirect} />
             </div>
         </Router>
-    </ApolloProvider>,
+    </ApolloProvider>, 
     document.getElementById('root')
 );
 

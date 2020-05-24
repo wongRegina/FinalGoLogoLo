@@ -45,7 +45,7 @@ module.exports = function(passport) {
         process.nextTick(function() {
 
             // try to find the user based on their google id
-            User.findOne({ 'uid' : profile.id }, function(err, user) {
+            User.findOne({ 'user' : profile.id }, function(err, user) {
                 if (err)
                     return done(err);
 
@@ -58,7 +58,7 @@ module.exports = function(passport) {
                     var newUser = new User();
 
                     // set all of the relevant information
-                    newUser.uid    = profile.id;
+                    newUser.user    = profile.id;
                     newUser.token = token;
                     newUser.name  = profile.displayName;
                     newUser.email = profile.emails[0].value; // pull the first email

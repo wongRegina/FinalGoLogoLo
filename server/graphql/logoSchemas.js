@@ -82,23 +82,23 @@ var queryType = new GraphQLObjectType({
                 },
                 resolve: function (root, params) {
                     //const logoDetails = LogoModel.findById(params.id).exec()
-                    const logoDetails = LogoModel.findOne({ _id: params.id, uid: params.uid }).exec();
+                    const logoDetails = LogoModel.findOne({ _id: params.id, user: params.user }).exec();
                     if (!logoDetails) {
                         throw new Error('Error')
                     }
                     return logoDetails
                 }
             },
-            getLogoByUid: {
+            getLogoByUser: {
                 type: new GraphQLList(logoType),
                 args: {
-                    uid: {
-                        name: 'uid',
+                    user: {
+                        name: 'user',
                         type: GraphQLString
                     }
                 },
                 resolve: function (root, params) {
-                    const logos = LogoModel.find({ uid: params.uid }).exec();
+                    const logos = LogoModel.find({ user: params.user }).exec();
                     if (!logos) {
                         throw new Error('Error');
                     }
@@ -151,7 +151,7 @@ var mutation = new GraphQLObjectType({
                     }
                 },
                 resolve: function (root, params) {
-                    UserModel.findOne({ uid: params.uid }, function (err, result) {
+                    UserModel.findOne({ user: params.user }, function (err, result) {
                         if (err) throw new Error(err);
                         if (!result) {
                             return null;
@@ -206,7 +206,7 @@ var mutation = new GraphQLObjectType({
                 resolve(root, params) {
                     return LogoModel.findByIdAndUpdate(params.id,
                         {
-                            uid: params.uid, text: params.text, color: params.color, fontSize: params.fontSize,
+                            user: params.user, text: params.text, color: params.color, fontSize: params.fontSize,
                             backgroundColor: params.backgroundColor, borderColor: params.borderColor,
                             borderWidth: params.borderWidth, borderRadius: params.borderRadius,
                             padding: params.padding, margin: params.margin, lastUpdate: new Date()

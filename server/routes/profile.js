@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', isLoggedIn, function(req, res) {
     //res.send(req.user);
-    res.redirect('http://localhost:3001/redirect/'+req.user.uid);
+    res.redirect('http://localhost:3001/redirect/'+req.user.user);
 });
 
 function isLoggedIn(req, res, next) {
