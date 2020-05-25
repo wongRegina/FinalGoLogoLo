@@ -16,6 +16,8 @@ const GET_LOGO = gql`
             borderWidth
             padding
             margin
+            width
+            height
         }
     }
 `;
@@ -30,9 +32,11 @@ const UPDATE_LOGO = gql`
         $backgroundColor: String!,
         $borderColor: String!,
         $borderRadius: Int!,
-        $borderWidth: Int!
-        $padding: Int!
-        $margin: Int!) {
+        $borderWidth: Int!,
+        $padding: Int!,
+        $margin: Int!,
+        $width: Int!,
+        $height: Int!) {
             updateLogo(
                 id: $id,
                 user: $user,
@@ -42,9 +46,11 @@ const UPDATE_LOGO = gql`
                 backgroundColor: $backgroundColor,
                 borderColor: $borderColor,
                 borderRadius: $borderRadius,
-                borderWidth: $borderWidth
-                padding: $padding
-                margin: $margin) {
+                borderWidth: $borderWidth,
+                padding: $padding,
+                margin: $margin,
+                width: $width,
+                height: $height) {
                     lastUpdate
                 }
         }
@@ -62,7 +68,9 @@ class EditLogoScreen extends Component {
             borderRadius: "",
             borderWidth: "",
             padding: "",
-            margin: ""
+            margin: "",
+            width: "",
+            height: ""
         };
     }
 
@@ -117,8 +125,18 @@ class EditLogoScreen extends Component {
         this.setState({ margin: event.target.value });
     }
 
+    handleWidthChange = (event) => {
+        console.log("handleWidthChange to " + event.target.value)
+        this.setState({ width: event.target.value });
+    }
+
+    handleHeightChange = (event) => {
+        console.log("handleHeightChange to " + event.target.value)
+        this.setState({ height: event.target.value });
+    }
+
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, width, height;
         user = localStorage.getItem("User");
         return (
             <Query query={GET_LOGO} variables={{ logoId: this.props.match.params.id, user: localStorage.getItem("User") }}>
@@ -135,12 +153,14 @@ class EditLogoScreen extends Component {
                         this.setState({ borderWidth: data.logo.borderWidth });
                         this.setState({ padding: data.logo.padding });
                         this.setState({ margin: data.logo.margin });
+                        this.setState({ width: data.logo.width });
+                        this.setState({ height: data.logo.height });
                     }
 
                     return (
                         <Mutation mutation={UPDATE_LOGO} key={data.logo._id} onCompleted={() =>
-                            // this.props.history.push(`/view/${data.logo._id}`)
-                            this.props.history.push('/')
+                            this.props.history.push(`/view/${data.logo._id}`)
+                            // this.props.history.push('/')
                         }>
                             {(updateLogo, { loading, error }) => (
                                 <div className="container">
@@ -171,7 +191,9 @@ class EditLogoScreen extends Component {
                                                                 borderRadius: parseInt(borderRadius.value),
                                                                 borderWidth: parseInt(borderWidth.value),
                                                                 padding: parseInt(padding.value),
-                                                                margin: parseInt(margin.value)
+                                                                margin: parseInt(margin.value),
+                                                                height: parseInt(height.value),
+                                                                width: parseInt(width.value)
                                                             }
                                                         });
                                                         text.value = "";
@@ -183,6 +205,8 @@ class EditLogoScreen extends Component {
                                                         borderWidth.value = "";
                                                         padding.value = "";
                                                         margin.value = "";
+                                                        width.value = "";
+                                                        height.value = "";
                                                     }}>
                                                         <div className="form-group">
                                                             <label htmlFor="text">Text:</label>
@@ -247,6 +271,20 @@ class EditLogoScreen extends Component {
                                                                     margin = node;
                                                                 }} placeholder="Margin" defaultValue={data.logo.margin} />
                                                         </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="width">Width:</label>
+                                                            <input type="number" min="100" max="700" className="form-control"
+                                                                onChange={this.handleWidthChange} name="width" ref={node => {
+                                                                    width = node;
+                                                                }} placeholder="Width" defaultValue={data.logo.width}/>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="height">Height:</label>
+                                                            <input type="number" min="100" max="1000" className="form-control"
+                                                                onChange={this.handleHeightChange} name="height" ref={node => {
+                                                                    height = node;
+                                                                }} placeholder="Height" defaultValue={data.logo.height} />
+                                                        </div>
                                                         <button type="submit" className="btn btn-success" >
                                                             Submit
                                                         </button>
@@ -269,8 +307,8 @@ class EditLogoScreen extends Component {
                                                             borderWidth: parseInt(this.state.borderWidth),
                                                             padding: parseInt(this.state.padding),
                                                             margin: parseInt(this.state.margin),
-                                                            width: "max-content",
-                                                            height: "max-content",
+                                                            width: parseInt(this.state.width),
+                                                            height: parseInt(this.state.height),
                                                             overflow: 'auto'
                                                         }}>
                                                         {this.state.text}

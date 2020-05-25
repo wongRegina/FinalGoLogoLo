@@ -17,6 +17,8 @@ const GET_LOGO = gql`
             borderWidth
             padding
             margin
+            height
+            width
             lastUpdate
         }
     }
@@ -78,6 +80,10 @@ class ViewLogoScreen extends Component {
                                                 <dd>{data.logo.padding}</dd> 
                                                 <dt>Margin:</dt>
                                                 <dd>{data.logo.margin}</dd>
+                                                <dt>Height:</dt>
+                                                <dd>{data.logo.height}</dd>
+                                                <dt>Width:</dt>
+                                                <dd>{data.logo.width}</dd>
                                                 <dt>Last Updated:</dt>
                                                 <dd>{data.logo.lastUpdate}</dd>
                                             </dl>
@@ -94,8 +100,8 @@ class ViewLogoScreen extends Component {
                                                     borderWidth: data.logo.borderWidth,
                                                     padding: data.logo.padding,
                                                     margin: data.logo.margin,
-                                                    width: "max-content",
-                                                    height: "max-content",
+                                                    width: data.logo.width,
+                                                    height: data.logo.height,
                                                     overflow: 'auto'}}>
                                                 {data.logo.text}
                                             </div>

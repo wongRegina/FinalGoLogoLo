@@ -15,7 +15,9 @@ const ADD_LOGO = gql`
         $borderRadius: Int!,
         $borderWidth: Int!,
         $padding: Int!,
-        $margin: Int!){
+        $margin: Int!,
+        $width: Int!,
+        $height: Int!){
         addLogo(
             user: $user,
             text: $text,
@@ -26,7 +28,9 @@ const ADD_LOGO = gql`
             borderRadius: $borderRadius,
             borderWidth: $borderWidth,
             padding: $padding,
-            margin: $margin,) {
+            margin: $margin,
+            width: $width,
+            height: $height) {
             _id
         }
     }
@@ -148,6 +152,8 @@ class CreateLogoScreen extends Component {
                                                     borderWidth: parseInt(borderWidth.value),
                                                     padding: parseInt(padding.value),
                                                     margin: parseInt(margin.value),
+                                                    width: parseInt(width.value),
+                                                    height: parseInt(height.value)
                                                 }
                                             });
                                             text.value = "";
