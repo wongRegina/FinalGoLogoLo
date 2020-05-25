@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
+import { Rnd } from "react-rnd";
 
 const GET_LOGO = gql`
     query logo($logoId: String, $user: String) {
@@ -18,6 +19,13 @@ const GET_LOGO = gql`
             margin
             width
             height
+            textX
+            textY
+            url
+            imageX
+            imageY
+            imageWidth
+            imageHeight
         }
     }
 `;
@@ -36,7 +44,14 @@ const UPDATE_LOGO = gql`
         $padding: Int!,
         $margin: Int!,
         $width: Int!,
-        $height: Int!) {
+        $height: Int!,
+        $textX: Int!,
+        $textY: Int!,
+        $url: String!
+        $imageX: Int!,
+        $imageY: Int!,
+        $imageWidth: Int!,
+        $imageHeight: Int!) {
             updateLogo(
                 id: $id,
                 user: $user,
@@ -50,7 +65,14 @@ const UPDATE_LOGO = gql`
                 padding: $padding,
                 margin: $margin,
                 width: $width,
-                height: $height) {
+                height: $height,
+                textX: $textX
+                textY: $textY,
+                url: $url,
+                imageX: $imageX,
+                imageY: $imageY,
+                imageWidth: $imageWidth,
+                imageHeight: $imageHeight) {
                     lastUpdate
                 }
         }
@@ -70,7 +92,14 @@ class EditLogoScreen extends Component {
             padding: "",
             margin: "",
             width: "",
-            height: ""
+            height: "",
+            url: "",
+            textX: "",
+            textY:"",
+            imageX: "",
+            imageY: "",
+            imageHeight: "",
+            imageWidth: ""
         };
     }
 
@@ -135,8 +164,16 @@ class EditLogoScreen extends Component {
         this.setState({ height: event.target.value });
     }
 
+    handleURLChange = (event) => {
+        console.log("handleURLChange to " + event.target.value)
+        this.setState({ url: event.target.value})
+        if(event.target.value ===""){
+            this.setState({imageWidth: "200", imageHeight: "200" })
+        }
+    }
+
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, width, height;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, width, height,url;
         user = localStorage.getItem("User");
         return (
             <Query query={GET_LOGO} variables={{ logoId: this.props.match.params.id, user: localStorage.getItem("User") }}>
@@ -155,6 +192,13 @@ class EditLogoScreen extends Component {
                         this.setState({ margin: data.logo.margin });
                         this.setState({ width: data.logo.width });
                         this.setState({ height: data.logo.height });
+                        this.setState({ textX: data.logo.textX });
+                        this.setState({ textY: data.logo.textY });
+                        this.setState({ imageX: data.logo.imageX });
+                        this.setState({ imageY: data.logo.imageY });
+                        this.setState({ imageHeight: data.logo.imageHeight });
+                        this.setState({ imageWidth: data.logo.imageWidth });
+                        this.setState({url:data.logo.url});
                     }
 
                     return (
@@ -193,7 +237,14 @@ class EditLogoScreen extends Component {
                                                                 padding: parseInt(padding.value),
                                                                 margin: parseInt(margin.value),
                                                                 height: parseInt(height.value),
-                                                                width: parseInt(width.value)
+                                                                width: parseInt(width.value),
+                                                                textX: parseInt(this.state.textX),
+                                                                textY: parseInt(this.state.textY),
+                                                                imageX: this.state.imageX,
+                                                                imageY: this.state.imageY,
+                                                                imageWidth: this.state.imageWidth,
+                                                                imageHeight: this.state.imageHeight,
+                                                                url: text.value
                                                             }
                                                         });
                                                         text.value = "";
@@ -276,7 +327,7 @@ class EditLogoScreen extends Component {
                                                             <input type="number" min="100" max="700" className="form-control"
                                                                 onChange={this.handleWidthChange} name="width" ref={node => {
                                                                     width = node;
-                                                                }} placeholder="Width" defaultValue={data.logo.width}/>
+                                                                }} placeholder="Width" defaultValue={data.logo.width} />
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="height">Height:</label>
@@ -284,6 +335,13 @@ class EditLogoScreen extends Component {
                                                                 onChange={this.handleHeightChange} name="height" ref={node => {
                                                                     height = node;
                                                                 }} placeholder="Height" defaultValue={data.logo.height} />
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="url">URL for an image:</label>
+                                                            <input type="text" className="form-control" name="url"
+                                                                onChange={this.handleURLChange} ref={node => {
+                                                                    url = node;
+                                                                }} placeholder="URL" defaultValue={data.logo.url} />
                                                         </div>
                                                         <button type="submit" className="btn btn-success" >
                                                             Submit
@@ -298,20 +356,41 @@ class EditLogoScreen extends Component {
                                                 }}>
                                                     <div className="row" style={
                                                         {
-                                                            color: (this.state.textColor),
-                                                            fontSize: parseInt(this.state.fontSize),
-                                                            backgroundColor: (this.state.backgroundColor),
-                                                            borderColor: (this.state.borderColor),
+                                                            backgroundColor: this.state.backgroundColor,
+                                                            borderColor: this.state.borderColor,
                                                             borderStyle: "solid",
                                                             borderRadius: parseInt(this.state.borderRadius),
                                                             borderWidth: parseInt(this.state.borderWidth),
                                                             padding: parseInt(this.state.padding),
                                                             margin: parseInt(this.state.margin),
-                                                            width: parseInt(this.state.width),
                                                             height: parseInt(this.state.height),
-                                                            overflow: 'auto'
+                                                            width: parseInt(this.state.width),
                                                         }}>
-                                                        {this.state.text}
+                                                        <Rnd
+                                                            position={{ x: this.state.textX, y: this.state.textY }}
+                                                            bounds="parent"
+                                                            style={{
+                                                                color: this.state.textColor,
+                                                                fontSize: parseInt(this.state.fontSize)
+                                                            }}
+                                                            onDragStop={(e, d) => { this.setState({ textX: d.x, textY: d.y }) }}
+                                                        >
+                                                            {this.state.text}
+                                                        </Rnd>
+                                                        <Rnd
+                                                            position={{ x: this.state.imageX, y: this.state.imageY }}
+                                                            bounds="parent"
+                                                            onDragStop={(e, d) => { this.setState({ imageX: d.x, imageY: d.y }) }}
+                                                            onResizeStop={(e, direction, ref, delta, position) => {
+                                                                this.setState({
+                                                                    imageWidth: ref.style.width,
+                                                                    imageHeight: ref.style.height,
+                                                                    ...position,
+                                                                });
+                                                            }}
+                                                        >
+                                                            <img src={this.state.url} width={this.state.image === "" ? 0 : this.state.imageWidth} height={this.state.image === "" ? 0 : this.state.imageHeight} draggable={false} />
+                                                        </Rnd>
                                                     </div>
                                                 </div>
                                             </div>

@@ -17,7 +17,14 @@ const ADD_LOGO = gql`
         $padding: Int!,
         $margin: Int!,
         $width: Int!,
-        $height: Int!){
+        $height: Int!,
+        $textX: Int!,
+        $textY: Int!,
+        $url: String!
+        $imageX: Int!,
+        $imageY: Int!,
+        $imageWidth: Int!,
+        $imageHeight: Int!){
         addLogo(
             user: $user,
             text: $text,
@@ -30,7 +37,14 @@ const ADD_LOGO = gql`
             padding: $padding,
             margin: $margin,
             width: $width,
-            height: $height) {
+            height: $height,
+            textX: $textX,
+            textY: $textY,
+            url: $url,
+            imageX: $imageX,
+            imageY: $imageY,
+            imageWidth: $imageWidth,
+            imageHeight: $imageHeight) {
             _id
         }
     }
@@ -50,7 +64,14 @@ class CreateLogoScreen extends Component {
             padding: "10",
             margin: "10",
             width: "300",
-            height: "100"
+            height: "100",
+            textX: "25",
+            textY: "25",
+            imageX: "0",
+            imageY: "0",
+            imageHeight: "0",
+            imageWidth: "0",
+            url: ""
         };
     }
 
@@ -114,9 +135,17 @@ class CreateLogoScreen extends Component {
         console.log("handleHeightChange to " + event.target.value)
         this.setState({ height: event.target.value });
     }
+    
+    handleURLChange = (event) => {
+        console.log("handleURLChange to " + event.target.value)
+        this.setState({ url: event.target.value})
+        if(event.target.value ===""){
+            this.setState({imageWidth: "200", imageHeight: "200" })
+        }
+    }
 
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, height, width;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, height, width,url;
         user = localStorage.getItem("User")
         return (
             <Mutation mutation={ADD_LOGO} onCompleted={data => {
@@ -153,7 +182,14 @@ class CreateLogoScreen extends Component {
                                                     padding: parseInt(padding.value),
                                                     margin: parseInt(margin.value),
                                                     width: parseInt(width.value),
-                                                    height: parseInt(height.value)
+                                                    height: parseInt(height.value),
+                                                    textX: parseInt(this.state.textX),
+                                                    textY: parseInt(this.state.textY),
+                                                    imageX: parseInt(this.state.imageX), 
+                                                    imageY: parseInt(this.state.imageY),
+                                                    imageWidth: parseInt(this.state.imageWidth), 
+                                                    imageHeight: parseInt(this.state.imageHeight),
+                                                    url: url.value
                                                 }
                                             });
                                             text.value = "";
@@ -167,6 +203,7 @@ class CreateLogoScreen extends Component {
                                             margin.value = "";
                                             height.value = "";
                                             width.value = "";
+                                            url.value = "";
                                         }}>
                                             <div className="form-group">
                                                 <label htmlFor="text">Text:</label>
@@ -245,6 +282,13 @@ class CreateLogoScreen extends Component {
                                                         height = node;
                                                     }} placeholder="Height" defaultValue="100" />
                                             </div>
+                                            <div className="form-group">
+                                                <label htmlFor="url">URL for an image:</label>
+                                                <input type="text" className="form-control" name="url"
+                                                    onChange={this.handleURLChange} ref={node => {
+                                                        url = node;
+                                                    }} placeholder="URL" />
+                                            </div>
                                             <button type="submit" className="btn btn-success">Submit</button>
                                         </form>
                                         {loading && <p>Loading...</p>}
@@ -256,8 +300,6 @@ class CreateLogoScreen extends Component {
                                     }}>
                                         <div className="row" style={
                                             {
-                                                color: this.state.textColor,
-                                                fontSize: parseInt(this.state.fontSize),
                                                 backgroundColor: this.state.backgroundColor,
                                                 borderColor: this.state.borderColor,
                                                 borderStyle: "solid",
@@ -268,7 +310,31 @@ class CreateLogoScreen extends Component {
                                                 height: parseInt(this.state.height),
                                                 width: parseInt(this.state.width),
                                             }}>
-                                            {this.state.text}
+                                            <Rnd
+                                                position={{ x: this.state.textX, y: this.state.textY }}
+                                                bounds="parent"
+                                                style={{
+                                                    color: this.state.textColor,
+                                                    fontSize: parseInt(this.state.fontSize)
+                                                }}
+                                                onDragStop={(e, d) => { this.setState({ textX: d.x, textY: d.y }) }}
+                                            >
+                                                {this.state.text}
+                                            </Rnd>
+                                            <Rnd
+                                                position={{ x: this.state.imageX, y: this.state.imageY }}
+                                                bounds="parent"
+                                                onDragStop={(e, d) => { this.setState({ imageX: d.x, imageY: d.y }) }}
+                                                onResizeStop={(e, direction, ref, delta, position) => {
+                                                    this.setState({
+                                                        imageWidth: ref.style.width,
+                                                        imageHeight: ref.style.height,
+                                                        ...position,
+                                                    });
+                                                }}
+                                            >
+                                                <img src={this.state.url} width={this.state.image === "" ? 0 : this.state.imageWidth} height={this.state.image === "" ? 0 : this.state.imageHeight} draggable={false} />
+                                            </Rnd>
                                         </div>
                                     </div>
                                 </div>

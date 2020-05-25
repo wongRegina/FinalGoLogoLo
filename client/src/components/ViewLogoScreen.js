@@ -4,6 +4,7 @@ import '../App.css';
 import gql from 'graphql-tag';
 import domtoimage from 'dom-to-image';
 import { Query, Mutation } from 'react-apollo';
+import { Rnd } from "react-rnd";
 
 const GET_LOGO = gql`
     query logo($logoId: String, $user: String) {
@@ -20,6 +21,13 @@ const GET_LOGO = gql`
             margin
             height
             width
+            textX
+            textY
+            url
+            imageX
+            imageY
+            imageWidth
+            imageHeight
             lastUpdate
         }
     }
@@ -36,9 +44,9 @@ const DELETE_LOGO = gql`
 class ViewLogoScreen extends Component {
 
     componentDidMount() {
-        let auth=localStorage.getItem("User");
-        if(!auth){
-            window.location.href="http://localhost:3000/auth/google";
+        let auth = localStorage.getItem("User");
+        if (!auth) {
+            window.location.href = "http://localhost:3000/auth/google";
         }
     }
 
@@ -70,8 +78,8 @@ class ViewLogoScreen extends Component {
                                     </h3>
                                 </div>
                                 <div className="panel-body">
-                                    <div className ="container row">
-                                        <div className ="col-md-3">
+                                    <div className="container row">
+                                        <div className="col-md-3">
                                             <dl>
                                                 <dt>Text:</dt>
                                                 <dd>{data.logo.text}</dd>
@@ -88,7 +96,7 @@ class ViewLogoScreen extends Component {
                                                 <dt>Border Width(Border Thickness):</dt>
                                                 <dd>{data.logo.borderWidth}</dd>
                                                 <dt>Padding:</dt>
-                                                <dd>{data.logo.padding}</dd> 
+                                                <dd>{data.logo.padding}</dd>
                                                 <dt>Margin:</dt>
                                                 <dd>{data.logo.margin}</dd>
                                                 <dt>Height:</dt>
@@ -99,11 +107,14 @@ class ViewLogoScreen extends Component {
                                                 <dd>{data.logo.lastUpdate}</dd>
                                             </dl>
                                         </div>
-                                        <div className ="col-md-8" style = {{width: "max-content",
-                                                    height: "max-content",overflow: 'auto'}} id ="logo">
-                                            <div className = "row" style ={
-                                                    {color: data.logo.color,
-                                                    fontSize: data.logo.fontSize,
+                                        <div className="col-md-8" style={{
+                                            width: "max-content",
+                                            height: "max-content", overflow: 'auto'
+                                        }} id="logo">
+                                            <div className="row" style={
+                                                {
+                                                    color: data.logo.textColor,
+                                                    fontSize: parseInt(data.logo.fontSize),
                                                     backgroundColor: data.logo.backgroundColor,
                                                     borderColor: data.logo.borderColor,
                                                     borderStyle: "solid",
@@ -113,8 +124,25 @@ class ViewLogoScreen extends Component {
                                                     margin: data.logo.margin,
                                                     width: data.logo.width,
                                                     height: data.logo.height,
-                                                    overflow: 'auto'}}>
-                                                {data.logo.text}
+                                                    overflow: 'auto'
+                                                }}>
+                                                <Rnd
+                                                    position={{ x: data.logo.textX, y: data.logo.textY }}
+                                                    bounds="parent"
+                                                    style={{
+                                                        color: data.logo.color,
+                                                        fontSize: parseInt(data.logo.fontSize)
+                                                    }}
+                                                    onDragStop={(e, d) => { }}
+                                                >
+                                                    {data.logo.text}
+                                                </Rnd>
+                                                <Rnd
+                                                    position={{ x: data.logo.imageX, y: data.logo.imageY }}
+                                                    bounds="parent"
+                                                >
+                                                    <img src={data.logo.url} width={data.logo.image === "" ? 0 : data.logo.imageWidth} height={data.logo.image === "" ? 0 : data.logo.imageHeight} draggable={false} />
+                                                </Rnd>
                                             </div>
                                         </div>
                                     </div>
@@ -136,9 +164,9 @@ class ViewLogoScreen extends Component {
                                         )}
                                     </Mutation>
                                 </div>
-                                
+
                             </div>
-                         </div>
+                        </div>
                     );
                 }}
             </Query>

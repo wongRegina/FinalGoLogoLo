@@ -17,7 +17,7 @@ var logoType = new GraphQLObjectType({
             _id: {
                 type: GraphQLString
             },
-            user:{
+            user: {
                 type: GraphQLString
             },
             text: {
@@ -44,14 +44,35 @@ var logoType = new GraphQLObjectType({
             padding: {
                 type: GraphQLInt
             },
-            margin:{
+            margin: {
                 type: GraphQLInt
             },
-            width:{
+            width: {
                 type: GraphQLInt
             },
-            height:{
+            height: {
                 type: GraphQLInt
+            },
+            textX: {
+                type: GraphQLInt
+            },
+            textY: {
+                type: GraphQLInt
+            },
+            imageX: {
+                type: GraphQLInt
+            },
+            imageY: {
+                type: GraphQLInt
+            },
+            imageHeight: {
+                type: GraphQLInt
+            },
+            imageWidth: {
+                type: GraphQLInt
+            },
+            url: {
+                type: GraphQLString
             },
             lastUpdate: {
                 type: GraphQLDate
@@ -81,7 +102,7 @@ var queryType = new GraphQLObjectType({
                         name: '_id',
                         type: GraphQLString
                     },
-                    user:{
+                    user: {
                         name: "user",
                         type: GraphQLString
                     }
@@ -122,8 +143,8 @@ var mutation = new GraphQLObjectType({
             addLogo: {
                 type: logoType,
                 args: {
-                    user:{
-                        type :new GraphQLNonNull(GraphQLString)
+                    user: {
+                        type: new GraphQLNonNull(GraphQLString)
                     },
                     text: {
                         type: new GraphQLNonNull(GraphQLString)
@@ -143,7 +164,7 @@ var mutation = new GraphQLObjectType({
                     borderRadius: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    padding:{
+                    padding: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
                     borderWidth: {
@@ -152,14 +173,35 @@ var mutation = new GraphQLObjectType({
                     padding: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    margin:{
+                    margin: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    width:{
+                    width: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    height:{
+                    height: {
                         type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    textX: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    textY: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageX: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageY: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageHeight: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageWidth: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    url: {
+                        type: new GraphQLNonNull(GraphQLString)
                     }
                 },
                 resolve: function (root, params) {
@@ -214,11 +256,32 @@ var mutation = new GraphQLObjectType({
                     margin: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    width:{
+                    width: {
                         type: new GraphQLNonNull(GraphQLInt)
                     },
-                    height:{
+                    height: {
                         type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    textX: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    textY: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageX: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageY: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageHeight: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    imageWidth: {
+                        type: new GraphQLNonNull(GraphQLInt)
+                    },
+                    url: {
+                        type: new GraphQLNonNull(GraphQLString)
                     }
                 },
                 resolve(root, params) {
@@ -227,9 +290,12 @@ var mutation = new GraphQLObjectType({
                             user: params.user, text: params.text, color: params.color, fontSize: params.fontSize,
                             backgroundColor: params.backgroundColor, borderColor: params.borderColor,
                             borderWidth: params.borderWidth, borderRadius: params.borderRadius,
-                            padding: params.padding, margin: params.margin, 
-                            width: params.width, height:params.height
-                            ,lastUpdate: new Date()
+                            padding: params.padding, margin: params.margin,
+                            width: params.width, height: params.height,
+                            textX: params.textX, textY: params.textY,
+                            imageX: params.imageX, imageY: params.imageY,
+                            imageHeight: params.imageHeight, imageWidth: params.imageWidth,
+                            url: params.url, lastUpdate: new Date()
                         }, function (err) {
                             if (err) return next(err);
                         });
