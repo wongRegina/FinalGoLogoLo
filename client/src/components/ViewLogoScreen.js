@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import gql from 'graphql-tag';
+import domtoimage from 'dom-to-image';
 import { Query, Mutation } from 'react-apollo';
 
 const GET_LOGO = gql`
@@ -39,6 +40,16 @@ class ViewLogoScreen extends Component {
         if(!auth){
             window.location.href="http://localhost:3000/auth/google";
         }
+    }
+
+    exportLogo = (event) => {
+        domtoimage.toPng(document.getElementById('logo'), { quality: 0.95, bgcolor: "white" })
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'logo.png';
+                link.href = dataUrl;
+                link.click();
+            });
     }
 
     render() {
@@ -89,7 +100,7 @@ class ViewLogoScreen extends Component {
                                             </dl>
                                         </div>
                                         <div className ="col-md-8" style = {{width: "max-content",
-                                                    height: "max-content",overflow: 'auto'}}>
+                                                    height: "max-content",overflow: 'auto'}} id ="logo">
                                             <div className = "row" style ={
                                                     {color: data.logo.color,
                                                     fontSize: data.logo.fontSize,
@@ -116,7 +127,8 @@ class ViewLogoScreen extends Component {
                                                         removeLogo({ variables: { id: data.logo._id } });
                                                     }}>
                                                     <Link to={`/edit/${data.logo._id}`} className="btn btn-success">Edit</Link>&nbsp;
-                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                <button type="submit" className="btn btn-danger">Delete</button>&nbsp;
+                                                <button type="button" onClick={this.exportLogo} className="btn btn-danger">Export</button>
                                                 </form>
                                                 {loading && <p>Loading...</p>}
                                                 {error && <p>Error :( Please try again</p>}
