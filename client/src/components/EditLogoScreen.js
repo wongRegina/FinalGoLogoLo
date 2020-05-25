@@ -54,15 +54,15 @@ class EditLogoScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: null,
-            fontSize: null,
-            textColor: null,
-            backgroundColor: null,
-            borderColor: null,
-            borderRadius: null,
-            borderWidth: null,
-            padding: null,
-            margin: null
+            text: "",
+            fontSize: "",
+            textColor: "",
+            backgroundColor: "",
+            borderColor: "",
+            borderRadius: "",
+            borderWidth: "",
+            padding: "",
+            margin: ""
         };
     }
 
@@ -125,7 +125,7 @@ class EditLogoScreen extends Component {
                 {({ loading, error, data }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
-                    if (this.state.text == null) {
+                    if (this.state.text === "") {
                         this.setState({ text: data.logo.text });
                         this.setState({ textColor: data.logo.color });
                         this.setState({ fontSize: data.logo.fontSize });
@@ -138,7 +138,10 @@ class EditLogoScreen extends Component {
                     }
 
                     return (
-                        <Mutation mutation={UPDATE_LOGO} key={data.logo._id} onCompleted={() => this.props.history.push(`/view/${data.logo._id}`)}>
+                        <Mutation mutation={UPDATE_LOGO} key={data.logo._id} onCompleted={() =>
+                            // this.props.history.push(`/view/${data.logo._id}`)
+                            this.props.history.push('/')
+                        }>
                             {(updateLogo, { loading, error }) => (
                                 <div className="container">
                                     <div className="panel panel-default">
@@ -245,7 +248,6 @@ class EditLogoScreen extends Component {
                                                                 }} placeholder="Margin" defaultValue={data.logo.margin} />
                                                         </div>
                                                         <button type="submit" className="btn btn-success" >
-                                                            {/*  onCompleted ={window.location.href = `/view/${data.logo._id}`}> */}
                                                             Submit
                                                         </button>
                                                     </form>
@@ -258,10 +260,10 @@ class EditLogoScreen extends Component {
                                                 }}>
                                                     <div className="row" style={
                                                         {
-                                                            color: this.state.textColor,
+                                                            color: (this.state.textColor),
                                                             fontSize: parseInt(this.state.fontSize),
-                                                            backgroundColor: this.state.backgroundColor,
-                                                            borderColor: this.state.borderColor,
+                                                            backgroundColor: (this.state.backgroundColor),
+                                                            borderColor: (this.state.borderColor),
                                                             borderStyle: "solid",
                                                             borderRadius: parseInt(this.state.borderRadius),
                                                             borderWidth: parseInt(this.state.borderWidth),

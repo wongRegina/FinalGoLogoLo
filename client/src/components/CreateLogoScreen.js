@@ -15,7 +15,7 @@ const ADD_LOGO = gql`
         $borderRadius: Int!,
         $borderWidth: Int!,
         $padding: Int!,
-        $margin: Int!) {
+        $margin: Int!){
         addLogo(
             user: $user,
             text: $text,
@@ -26,7 +26,7 @@ const ADD_LOGO = gql`
             borderRadius: $borderRadius,
             borderWidth: $borderWidth,
             padding: $padding,
-            margin: $margin) {
+            margin: $margin,) {
             _id
         }
     }
@@ -45,8 +45,8 @@ class CreateLogoScreen extends Component {
             borderWidth: "10",
             padding: "10",
             margin: "10",
-            logoWidth: "300",
-            logoHeight: "100"
+            width: "300",
+            height: "100"
         };
     }
 
@@ -101,11 +101,24 @@ class CreateLogoScreen extends Component {
         this.setState({ margin: event.target.value });
     }
 
+    handleWidthChange = (event) => {
+        console.log("handleWidthChange to " + event.target.value)
+        this.setState({ width: event.target.value });
+    }
+
+    handleHeightChange = (event) => {
+        console.log("handleHeightChange to " + event.target.value)
+        this.setState({ height: event.target.value });
+    }
+
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, height, width;
         user = localStorage.getItem("User")
         return (
-            <Mutation mutation={ADD_LOGO} onCompleted={data => { this.props.history.push(`/view/${data.addLogo._id}`) }}>
+            <Mutation mutation={ADD_LOGO} onCompleted={data => {
+                // this.props.history.push(`/view/${data.addLogo._id}`) 
+                this.props.history.push('/')
+            }}>
                 {(addLogo, { loading, error }) => (
                     <div className="container">
                         <div className="panel panel-default">
@@ -119,13 +132,10 @@ class CreateLogoScreen extends Component {
                                 <div className="container row">
                                     <div className="col-md-3">
                                         <form onSubmit={e => {
-                                            console.log("a")
                                             e.preventDefault();
-                                            console.log("b")
                                             if ((text.value).trim() === "") {
                                                 return false;
                                             }
-                                            console.log("c")
                                             addLogo({
                                                 variables: {
                                                     user: user,
@@ -137,7 +147,7 @@ class CreateLogoScreen extends Component {
                                                     borderRadius: parseInt(borderRadius.value),
                                                     borderWidth: parseInt(borderWidth.value),
                                                     padding: parseInt(padding.value),
-                                                    margin: parseInt(margin.value)
+                                                    margin: parseInt(margin.value),
                                                 }
                                             });
                                             text.value = "";
@@ -149,6 +159,8 @@ class CreateLogoScreen extends Component {
                                             borderWidth.value = "";
                                             padding.value = "";
                                             margin.value = "";
+                                            height.value = "";
+                                            width.value = "";
                                         }}>
                                             <div className="form-group">
                                                 <label htmlFor="text">Text:</label>
@@ -213,6 +225,20 @@ class CreateLogoScreen extends Component {
                                                         margin = node;
                                                     }} placeholder="Margin" defaultValue="10" />
                                             </div>
+                                            <div className="form-group">
+                                                <label htmlFor="width">Width:</label>
+                                                <input type="number" min="100" max="700" className="form-control"
+                                                    onChange={this.handleWidthChange} name="width" ref={node => {
+                                                        width = node;
+                                                    }} placeholder="Width" defaultValue="300" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="height">Height:</label>
+                                                <input type="number" min="100" max="1000" className="form-control"
+                                                    onChange={this.handleHeightChange} name="height" ref={node => {
+                                                        height = node;
+                                                    }} placeholder="Height" defaultValue="100" />
+                                            </div>
                                             <button type="submit" className="btn btn-success">Submit</button>
                                         </form>
                                         {loading && <p>Loading...</p>}
@@ -233,9 +259,8 @@ class CreateLogoScreen extends Component {
                                                 borderWidth: parseInt(this.state.borderWidth),
                                                 padding: parseInt(this.state.padding),
                                                 margin: parseInt(this.state.margin),
-                                                width: "max-content",
-                                                height: "max-content",
-                                                overflow: 'auto'
+                                                height: parseInt(this.state.height),
+                                                width: parseInt(this.state.width),
                                             }}>
                                             {this.state.text}
                                         </div>

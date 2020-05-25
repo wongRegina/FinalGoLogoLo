@@ -58,16 +58,16 @@ var queryType = new GraphQLObjectType({
     name: 'Query',
     fields: function () {
         return {
-            // logos: {
-            //     type: new GraphQLList(logoType),
-            //     resolve: function () {
-            //         const logos = LogoModel.find().exec()
-            //         if (!logos) {
-            //             throw new Error('Error')
-            //         }
-            //         return logos
-            //     }
-            // },
+            logos: {
+                type: new GraphQLList(logoType),
+                resolve: function () {
+                    const logos = LogoModel.find().exec()
+                    if (!logos) {
+                        throw new Error('Error')
+                    }
+                    return logos
+                }
+            },
             logo: {
                 type: logoType,
                 args: {
