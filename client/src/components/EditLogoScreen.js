@@ -95,7 +95,7 @@ class EditLogoScreen extends Component {
             height: "",
             url: "",
             textX: "",
-            textY:"",
+            textY: "",
             imageX: "",
             imageY: "",
             imageHeight: "",
@@ -166,14 +166,14 @@ class EditLogoScreen extends Component {
 
     handleURLChange = (event) => {
         console.log("handleURLChange to " + event.target.value)
-        this.setState({ url: event.target.value})
-        if(event.target.value ===""){
-            this.setState({imageWidth: "200", imageHeight: "200" })
+        this.setState({ url: event.target.value, imageWidth: "200", imageHeight: "200" })
+        if (event.target.value === "") {
+            this.setState({ imageWidth: "0", imageHeight: "0" })
         }
     }
 
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, width, height,url;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, width, height, url;
         user = localStorage.getItem("User");
         return (
             <Query query={GET_LOGO} variables={{ logoId: this.props.match.params.id, user: localStorage.getItem("User") }}>
@@ -198,7 +198,7 @@ class EditLogoScreen extends Component {
                         this.setState({ imageY: data.logo.imageY });
                         this.setState({ imageHeight: data.logo.imageHeight });
                         this.setState({ imageWidth: data.logo.imageWidth });
-                        this.setState({url:data.logo.url});
+                        this.setState({ url: data.logo.url });
                     }
 
                     return (
@@ -244,7 +244,7 @@ class EditLogoScreen extends Component {
                                                                 imageY: this.state.imageY,
                                                                 imageWidth: this.state.imageWidth,
                                                                 imageHeight: this.state.imageHeight,
-                                                                url: text.value
+                                                                url: url.value
                                                             }
                                                         });
                                                         text.value = "";
@@ -383,13 +383,13 @@ class EditLogoScreen extends Component {
                                                             onDragStop={(e, d) => { this.setState({ imageX: d.x, imageY: d.y }) }}
                                                             onResizeStop={(e, direction, ref, delta, position) => {
                                                                 this.setState({
-                                                                    imageWidth: ref.style.width,
-                                                                    imageHeight: ref.style.height,
+                                                                    imageWidth: parseInt(ref.style.width),
+                                                                    imageHeight: parseInt(ref.style.height),
                                                                     ...position,
                                                                 });
                                                             }}
                                                         >
-                                                            <img src={this.state.url} width={this.state.image === "" ? 0 : this.state.imageWidth} height={this.state.image === "" ? 0 : this.state.imageHeight} draggable={false} />
+                                                            <img src={this.state.url} width={this.state.url === "" ? 0 : this.state.imageWidth} height={this.state.url === "" ? 0 : this.state.imageHeight} draggable={false} />
                                                         </Rnd>
                                                     </div>
                                                 </div>

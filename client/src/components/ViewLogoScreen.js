@@ -103,6 +103,8 @@ class ViewLogoScreen extends Component {
                                                 <dd>{data.logo.height}</dd>
                                                 <dt>Width:</dt>
                                                 <dd>{data.logo.width}</dd>
+                                                <dt>URL:</dt>
+                                                <dd>{data.logo.url}</dd>
                                                 <dt>Last Updated:</dt>
                                                 <dd>{data.logo.lastUpdate}</dd>
                                             </dl>
@@ -141,7 +143,7 @@ class ViewLogoScreen extends Component {
                                                     position={{ x: data.logo.imageX, y: data.logo.imageY }}
                                                     bounds="parent"
                                                 >
-                                                    <img src={data.logo.url} width={data.logo.image === "" ? 0 : data.logo.imageWidth} height={data.logo.image === "" ? 0 : data.logo.imageHeight} draggable={false} />
+                                                    <img src={data.logo.url} width={data.logo.url === "" ? 0 : data.logo.imageWidth} height={data.logo.url === "" ? 0 : data.logo.imageHeight} draggable={false} />
                                                 </Rnd>
                                             </div>
                                         </div>

@@ -135,17 +135,17 @@ class CreateLogoScreen extends Component {
         console.log("handleHeightChange to " + event.target.value)
         this.setState({ height: event.target.value });
     }
-    
+
     handleURLChange = (event) => {
         console.log("handleURLChange to " + event.target.value)
-        this.setState({ url: event.target.value})
-        if(event.target.value ===""){
-            this.setState({imageWidth: "200", imageHeight: "200" })
+        this.setState({ url: event.target.value, imageWidth: "200", imageHeight: "200" })
+        if (event.target.value === "") {
+            this.setState({ imageWidth: "0", imageHeight: "0" })
         }
     }
 
     render() {
-        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, height, width,url;
+        let user, text, color, fontSize, backgroundColor, borderColor, borderRadius, borderWidth, padding, margin, height, width, url;
         user = localStorage.getItem("User")
         return (
             <Mutation mutation={ADD_LOGO} onCompleted={data => {
@@ -185,9 +185,9 @@ class CreateLogoScreen extends Component {
                                                     height: parseInt(height.value),
                                                     textX: parseInt(this.state.textX),
                                                     textY: parseInt(this.state.textY),
-                                                    imageX: parseInt(this.state.imageX), 
+                                                    imageX: parseInt(this.state.imageX),
                                                     imageY: parseInt(this.state.imageY),
-                                                    imageWidth: parseInt(this.state.imageWidth), 
+                                                    imageWidth: parseInt(this.state.imageWidth),
                                                     imageHeight: parseInt(this.state.imageHeight),
                                                     url: url.value
                                                 }
@@ -327,13 +327,13 @@ class CreateLogoScreen extends Component {
                                                 onDragStop={(e, d) => { this.setState({ imageX: d.x, imageY: d.y }) }}
                                                 onResizeStop={(e, direction, ref, delta, position) => {
                                                     this.setState({
-                                                        imageWidth: ref.style.width,
-                                                        imageHeight: ref.style.height,
+                                                        imageWidth: parseInt(ref.style.width),
+                                                        imageHeight: parseInt(ref.style.height),
                                                         ...position,
                                                     });
                                                 }}
                                             >
-                                                <img src={this.state.url} width={this.state.image === "" ? 0 : this.state.imageWidth} height={this.state.image === "" ? 0 : this.state.imageHeight} draggable={false} />
+                                                <img src={this.state.url} width={this.state.url === "" ? 0 : this.state.imageWidth} height={this.state.url === "" ? 0 : this.state.imageHeight} draggable={false} />
                                             </Rnd>
                                         </div>
                                     </div>
